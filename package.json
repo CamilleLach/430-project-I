@@ -1,14 +1,14 @@
 {
-  "name": "http-api-assignment-ii",
+  "name": "igme-430-project-1",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/CamilleLach/http-api-assignment-ii#readme",
+  "homepage": "https://github.com/CamilleLach/430-project-I#readme",
   "bugs": {
-    "url": "https://github.com/CamilleLach/http-api-assignment-ii/issues"
+    "url": "https://github.com/CamilleLach/430-project-I/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CamilleLach/http-api-assignment-ii.git"
+    "url": "git+https://github.com/CamilleLach/430-project-I.git"
   },
   "license": "ISC",
   "author": "",
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.11.0",
-    "globals": "^17.12.0"
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0"
   }
 }

@@ -1,4 +1,5 @@
 const http = require('http');
+const url = require('url');
 const query = require('querystring');
 
 const htmlHandler = require('./htmlResponses.js');
@@ -6,13 +7,33 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//sned a JSON error response
+const sendError = (response, status, object) => {
+    const content = JSON.stringify(object);
+
+    response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(content, 'utf8'),
+    });
+
+    response.end(content);
+};
+
+//
 const parseBody = (request, response, handler) => {
     const body = [];
 
     request.on('error', (err) => {
         console.dir(err);
-        response.statusCode = 400;
-        response.end();
+
+        if (!response.headersSent) {
+            return sendError(response, 400, {
+                message: 'An error occurred while reading the request.',
+                id: 'requestError',
+            });
+        }
+
+        return response.end();
     });
 
     request.on('data', (chunk) => {
@@ -29,57 +50,76 @@ const parseBody = (request, response, handler) => {
             try {
                 request.body = JSON.parse(bodyString);
             } catch {
-                response.writeHead(400, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify({
+                return sendError(response, 400, {
                     message: 'Invalid JSON data.',
                     id: 'invalidJSON',
-                }));
-                return response.end();
+                });
             }
-        } else {
-            response.writeHead(400, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify({
+        }else {
+            return sendError(response, 400, {
                 message: 'Invalid data format.',
                 id: 'invalidFormat',
-            }));
-            return response.end();
-        }
-
+            });
+        } 
         return handler(request, response);
     });
 };
 
+//handle post requests (changes)
 const handlePost = (request, response, parsedUrl) => {
-    if (parsedUrl.pathname === '/addUser') {
-        return parseBody(request, response, jsonHandler.addUser);
-    }
+    switch (parsedUrl.pathname) {
+        case '/addPokemon':
+            return parseBody(request, response, jsonHandler.addPokemon);
 
-    return jsonHandler.notFound(request, response);
+        case '/updatePokemon':
+            return parseBody(request, response, jsonHandler.updatePokemon);
+
+        default:
+            return jsonHandler.notFound(request, response);
+    }
 };
 
+//handle get/head requests (get information)
 const handleGet = (request, response, parsedUrl) => {
-    if (parsedUrl.pathname === '/') {
-        return htmlHandler.getIndex(request, response);
-    }
+    switch (parsedUrl.pathname) {
+        case '/':
+            return htmlHandler.getIndex(request, response);
 
-    if (parsedUrl.pathname === '/style.css') {
-        return htmlHandler.getCSS(request, response);
-    }
+        case '/style.css':
+            return htmlHandler.getCSS(request, response);
 
-    if (parsedUrl.pathname === '/getUsers') {
-        return jsonHandler.getUsers(request, response);
-    }
+        case '/getPokemon':
+            return jsonHandler.getPokemon(request, response);
 
-    return jsonHandler.notFound(request, response);
+        case '/getPokemonByName':
+            return jsonHandler.getPokemonByName(
+                request,
+                response,
+                parsedUrl.query,
+            );
+
+        case '/getPokemonByType':
+            return jsonHandler.getPokemonByType(
+                request,
+                response,
+                parsedUrl.query,
+            );
+        case '/getWeaknesses':
+            return jsonHandler.getWeaknesses(
+                request,
+                response,
+                parsedUrl.query,
+            );
+
+        default:
+            return jsonHandler.notFound(request, response);
+    }
 };
 
-const onRequest = (request, response) => {
-    const protocol = request.connection.encrypted ? 'https' : 'http';
 
-    const parsedUrl = new URL(
-        request.url,
-        `${protocol}://${request.headers.host}`,
-    );
+//handle http requests
+const onRequest = (request, response) => {
+    const parsedUrl = url.parse(request.url, true);
 
     if (request.method === 'POST') {
         return handlePost(request, response, parsedUrl);
@@ -92,6 +132,7 @@ const onRequest = (request, response) => {
     return jsonHandler.notFound(request, response);
 };
 
+//create server
 http.createServer(onRequest).listen(port, () => {
     console.log(`Listening on 127.0.0.1: ${port}`);
 });
