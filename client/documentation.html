@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon API Documentation</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Pokemon API Documentation</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/documentation.html">API Documentation</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="panel documentation-panel">
+            <h2>API Endpoints</h2>
+            <p>
+                This API allows users to retrieve, search, add, and update
+                Pokemon data. All data is stored in memory until the server
+                restarts.
+            </p>
+            <p>
+                GET endpoints also support HEAD requests. HEAD returns
+                the same status and headers as GET, but without a body.
+            </p>
+
+            <h2>GET Endpoints</h2>
+
+            <section class="endpoint-info">
+                <h3>/getPokemon</h3>
+                <p>Returns all Pokemon in the dataset.</p>
+                <p><strong>Relative URL:</strong> /getPokemon</p>
+                <p><strong>Supported Methods:</strong> GET, HEAD</p>
+                <p><strong>Query Parameters:</strong> None</p>
+                <p><strong>Body Parameters:</strong> None</p>
+                <p><strong>Returns:</strong> HTTP 200 OK with a JSON object
+                    containing a pokemon array with all Pokemon and
+                    their available information.</p>
+
+                <h4>Example</h4>
+                <p>Request:
+                    <a href="/getPokemon">GET /getPokemon</a>
+                </p>
+                <p>Response (shortened):</p>
+                <pre><code>{
+    "pokemon": [
+        {
+            "id": 1,
+            "name": "Bulbasaur",
+            "type": ["Grass", "Poison"],
+            "weaknesses": ["Fire", "Ice", "Flying", "Psychic"]
+        },
+        {
+            "id": 2,
+            "name": "Ivysaur",
+            "type": ["Grass", "Poison"],
+            "weaknesses": ["Fire", "Ice", "Flying", "Psychic"]
+        }
+    ]
+}</code></pre>
+            </section>
+
+            <section class="endpoint-info">
+                <h3>/getPokemonByName</h3>
+                <p>Finds a Pokemon by its name.</p>
+                <p><strong>Relative URL:</strong> /getPokemonByName</p>
+                <p><strong>Supported Methods:</strong> GET, HEAD</p>
+                <p><strong>Query Parameters:</strong>
+                    name (String, Required)</p>
+                <p><strong>Body Parameters:</strong> None</p>
+                <p><strong>Returns:</strong> HTTP 200 OK with a JSON object
+                    containing one Pokemon matching the name. Returns
+                    400 Bad Request if the name is missing or invalid,
+                    and 404 Not Found if no Pokemon matches.</p>
+
+                <h4>Example</h4>
+                <p>Request:
+                    <a href="/getPokemonByName?name=Pikachu">
+                        GET /getPokemonByName?name=Pikachu
+                    </a>
+                </p>
+                <p>Response (shortened):</p>
+                <pre><code>{
+    "pokemon": {
+        "id": 25,
+        "name": "Pikachu",
+        "type": ["Electric"],
+        "weaknesses": ["Ground"]
+    }
+}</code></pre>
+            </section>
+
+            <section class="endpoint-info">
+                <h3>/getPokemonById</h3>
+                <p>Finds a Pokemon by its ID.</p>
+                <p><strong>Relative URL:</strong> /getPokemonById</p>
+                <p><strong>Supported Methods:</strong> GET, HEAD</p>
+                <p><strong>Query Parameters:</strong>
+                    id (Positive Integer, Required)</p>
+                <p><strong>Body Parameters:</strong> None</p>
+                <p><strong>Returns:</strong> HTTP 200 OK with a JSON object
+                    containing the Pokemon matching the ID. Returns
+                    400 Bad Request if the ID is missing or invalid,
+                    and 404 Not Found if no Pokemon matches.</p>
+
+                <h4>Example</h4>
+                <p>Request:
+                    <a href="/getPokemonById?id=25">
+                        GET /getPokemonById?id=25
+                    </a>
+                </p>
+                <p>Response (shortened):</p>
+                <pre><code>{
+    "pokemon": {
+        "id": 25,
+        "name": "Pikachu",
+        "type": ["Electric"],
+        "weaknesses": ["Ground"]
+    }
+}</code></pre>
+            </section>
+
+            <section class="endpoint-info">
+                <h3>/getPokemonByType</h3>
+                <p>Finds all Pokemon matching a given type.</p>
+                <p><strong>Relative URL:</strong> /getPokemonByType</p>
+                <p><strong>Supported Methods:</strong> GET, HEAD</p>
+                <p><strong>Query Parameters:</strong>
+                    type (String, Required)</p>
+                <p><strong>Body Parameters:</strong> None</p>
+                <p><strong>Returns:</strong> HTTP 200 OK with a JSON object
+                    containing a count of matching Pokemon and a pokemon
+                    array containing those Pokemon. Returns 400 Bad Request
+                    if the type is missing or invalid, and 404 Not Found
+                    if no Pokemon match.</p>
+
+                <h4>Example</h4>
+                <p>Request:
+                    <a href="/getPokemonByType?type=Fire">
+                        GET /getPokemonByType?type=Fire
+                    </a>
+                </p>
+                <p>Response (shortened):</p>
+                <pre><code>{
+    "count": 1,
+    "pokemon": [
+        {
+            "id": 4,
+            "name": "Charmander",
+            "type": ["Fire"],
+            "weaknesses": ["Water", "Ground", "Rock"]
+        }
+    ]
+}</code></pre>
+                <p>
+                    The actual response contains more than one Fire-type
+                    Pokemon.
+                </p>
+            </section>
+
+            <section class="endpoint-info">
+                <h3>/getWeaknesses</h3>
+                <p>Returns the weaknesses of a Pokemon by name.</p>
+                <p><strong>Relative URL:</strong> /getWeaknesses</p>
+                <p><strong>Supported Methods:</strong> GET, HEAD</p>
+                <p><strong>Query Parameters:</strong>
+                    name (String, Required)</p>
+                <p><strong>Body Parameters:</strong> None</p>
+                <p><strong>Returns:</strong> HTTP 200 OK with a JSON object
+                    containing the Pokemon's name (String) and weaknesses
+                    (Array of Strings). Returns 400 Bad Request if the
+                    name is missing or invalid, and 404 Not Found if no
+                    Pokemon matches.</p>
+
+                <h4>Example</h4>
+                <p>Request:
+                    <a href="/getWeaknesses?name=Pikachu">
+                        GET /getWeaknesses?name=Pikachu
+                    </a>
+                </p>
+                <p>Response:</p>
+                <pre><code>{
+    "name": "Pikachu",
+    "weaknesses": ["Ground"]
+}</code></pre>
+            </section>
+
+            <h2>POST Endpoints</h2>
+            <p>
+                Both POST endpoints accept application/json and
+                application/x-www-form-urlencoded request bodies.
+                For URL-encoded requests, arrays can be submitted
+                as comma-separated strings.
+            </p>
+
+            <section class="endpoint-info">
+                <h3>/addPokemon</h3>
+                <p>Adds a new Pokemon to the dataset in memory.</p>
+                <p><strong>Relative URL:</strong> /addPokemon</p>
+                <p><strong>Supported Methods:</strong> POST</p>
+                <p><strong>Query Parameters:</strong> None</p>
+
+                <p><strong>Body Parameters:</strong></p>
+                <ul>
+                    <li>id - Positive Integer, Required</li>
+                    <li>name - String, Required</li>
+                    <li>type - Array of Strings, Required</li>
+                    <li>weaknesses - Array of Strings, Required</li>
+                </ul>
+
+                <p><strong>Returns:</strong> HTTP 201 Created with a JSON
+                    object containing a confirmation message and the new
+                    Pokemon object. Returns 400 Bad Request if data is
+                    missing, invalid, or duplicates an existing Pokemon.</p>
+
+                <h4>Example</h4>
+                <p>Request: POST /addPokemon</p>
+                <p>Request Body (JSON):</p>
+                <pre><code>{
+    "id": 152,
+    "name": "Examplemon",
+    "type": ["Grass"],
+    "weaknesses": ["Fire"]
+}</code></pre>
+
+                <p>Response (201 Created):</p>
+                <pre><code>{
+    "message": "A new Pokemon has been added.",
+    "pokemon": {
+        "id": 152,
+        "name": "Examplemon",
+        "type": ["Grass"],
+        "weaknesses": ["Fire"]
+    }
+}</code></pre>
+            </section>
+
+            <section class="endpoint-info">
+                <h3>/updatePokemon</h3>
+                <p>
+                    Finds an existing Pokemon by name and updates
+                    its type and weaknesses.
+                </p>
+                <p><strong>Relative URL:</strong> /updatePokemon</p>
+                <p><strong>Supported Methods:</strong> POST</p>
+                <p><strong>Query Parameters:</strong> None</p>
+
+                <p><strong>Body Parameters:</strong></p>
+                <ul>
+                    <li>name - String, Required</li>
+                    <li>type - Array of Strings, Required</li>
+                    <li>weaknesses - Array of Strings, Required</li>
+                </ul>
+
+                <p><strong>Returns:</strong> HTTP 204 No Content on
+                    success, with no response body. Returns 400 Bad
+                    Request if data is missing or invalid, and
+                    404 Not Found if the Pokemon doesn't exist.</p>
+
+                <h4>Example</h4>
+                <p>Request: POST /updatePokemon</p>
+                <p>Request Body (JSON):</p>
+                <pre><code>{
+    "name": "Pikachu",
+    "type": ["Electric"],
+    "weaknesses": ["Ground", "Rock"]
+}</code></pre>
+
+                <p><strong>Response:</strong> 204 No Content</p>
+                <p>
+                    No JSON body is returned. The updated data can be
+                    retrieved through a GET request.
+                </p>
+            </section>
+
+            <h2>Error Responses</h2>
+            <p>
+                Invalid requests return JSON containing a message
+                explaining the error and an ID identifying its type.
+            </p>
+            <pre><code>{
+    "message": "Pokemon not found.",
+    "id": "pokemonNotFound"
+}</code></pre>
+        </section>
+    </main>
+</body>
+
+</html>

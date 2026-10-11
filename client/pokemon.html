@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Details</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/pokemon.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Pokemon API</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/documentation.html">API Documentation</a>
+        </nav>
+    </header>
+
+    <main>
+        <a href="/" class="back-link">Back to Home</a>
+
+        <section class="panel details-panel">
+            <h2 id="detailName">Loading Pokemon...</h2>
+
+            <div id="pokemonDetails"></div>
+
+            <p id="detailMessage" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+</body>
+
+</html>

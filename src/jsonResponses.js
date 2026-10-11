@@ -1,6 +1,10 @@
+//Based partly on HTTP API Assignment II
+//Re used the general JSON response helper
+//I also used the same structure/patterns for the error responses, GET/POST handlers, and endpoints
+//This file has changed so much i would say the majority is vastly different, but better to be safe than sorry.
+
 
 const dataManager = require('./dataManager.js');
-
 
 //helper function to convert a string into an array if needed
 const parseArrayField = (value) => {
@@ -14,7 +18,6 @@ const parseArrayField = (value) => {
 
     return null;
 };
-
 
 //function to respond with a json object
 const respondJSON = (request, response, status, object) => {
@@ -50,7 +53,6 @@ const getPokemon = (request, response) => {
     return respondJSON(request, response, 200, responseJSON);
 };
 
-
 //search for a pokemon by name
 const getPokemonByName = (request, response, params) => {
     const responseJSON = {};
@@ -82,6 +84,43 @@ const getPokemonByName = (request, response, params) => {
     //successful
     return respondJSON(request, response, 200, responseJSON);
 };
+
+//get pokemon by it's id
+const getPokemonById = (request, response, params) => {
+    const responseJSON = {};
+
+    const id = Number(params.id);
+
+    //check validity
+    if (
+        params.id === undefined
+        || typeof params.id !== 'string'
+        || !params.id.trim()
+        || !Number.isInteger(id)
+        || id <= 0
+    ) {
+        responseJSON.message = 'A valid Pokemon ID is required.';
+        responseJSON.id = 'invalidParams';
+
+        return respondJSON(request, response, 400, responseJSON);
+    }
+
+    const pokemon = dataManager.getAllPokemon();
+
+    const foundPokemon = pokemon.find((p) => p.id === id);
+
+    if (!foundPokemon) {
+        responseJSON.message = 'Pokemon not found.';
+        responseJSON.id = 'pokemonNotFound';
+
+        return respondJSON(request, response, 404, responseJSON);
+    }
+
+    responseJSON.pokemon = foundPokemon;
+
+    return respondJSON(request, response, 200, responseJSON);
+};
+
 
 //find and return pokemon of a specific type
 const getPokemonByType = (request, response, params) => {
@@ -195,6 +234,7 @@ const addPokemon = (request, response) => {
     //check all submitted info is the right type
     if (
         !Number.isInteger(id)
+        || id <= 0
         || typeof name !== 'string'
         || !name.trim()
         || !Array.isArray(type)
@@ -240,6 +280,7 @@ const addPokemon = (request, response) => {
 
 
 //change an existing pokemon
+//this isn't in the frpont end, the website was starting to get cluttered, but does still exist and work
 const updatePokemon = (request, response) => {
     const responseJSON = {};
 
@@ -302,6 +343,7 @@ const updatePokemon = (request, response) => {
 module.exports = {
     getPokemon,
     getPokemonByName,
+    getPokemonById,
     getPokemonByType,
     getWeaknesses,
     addPokemon,

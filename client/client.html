@@ -1,28 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokemon API</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/client.js" defer></script>
+</head>
 
-    <title>Project 1</title>
+<body>
+  <header>
+    <h1>Pokemon API</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/documentation.html">API Documentation</a>
+    </nav>
+  </header>
 
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
+  <main>
+    <div class="form-container">
+  
+      <section class="panel search-panel">
+        <h2>Search Pokemon</h2>
+  
+        <form id="nameForm">
+          <label for="pokemonName">Search by Name</label>
+          <input type="text" id="pokemonName" placeholder="e.g. Pikachu" required>
+          <button type="submit">Search</button>
+        </form>
 
-  <body>
-    <header>
-      <h1>Pokemon API</h1>
-      <p>IGME 430 project 1</p>
-    </header>
+        <form id="idForm">
+          <label for="pokemonId">Search by ID</label>
+          <input type="number" id="pokemonId" min="1" placeholder="e.g. 25" required>
+          <button type="submit">Search ID</button>
+        </form>
 
-    <main>
+        <form id="typeForm">
+          <label for="pokemonType">Search by Type</label>
+          <input type="text" id="pokemonType" placeholder="e.g. Fire" required>
+          <button type="submit">Filter</button>
+        </form>
+  
+        <button type="button" id="showAll">
+          Show All Pokemon
+        </button>
+      </section>
+  
+      <section class="panel add-panel">
+        <h2>Add a Pokemon</h2>
+  
+        <form id="addForm">
+          <label for="newId">Pokemon ID #</label>
+          <input type="number" id="newId" min="1" required>
+  
+          <label for="newName">Pokemon Name</label>
+          <input type="text" id="newName" required>
+  
+          <label for="newType">Type</label>
+          <input type="text" id="newType" placeholder="e.g. Grass,Poison" required>
+  
+          <label for="newWeaknesses">Weaknesses</label>
+          <input type="text" id="newWeaknesses" placeholder="e.g. Fire,Ice,Flying" required>
+  
+          <button type="submit">Add Pokemon</button>
+        </form>
+  
+        <p id="addMessage" role="status" aria-live="polite"></p>
+      </section>
+  
+    </div>
+  
+    <section class="panel results-panel">
+      <h2>Pokemon Results.</h2>
+      <p>Click Pokemon for more info</p>
+      <p id="resultMessage" role="status" aria-live="polite"></p>
+      <div id="pokemonResults"></div>
+    </section>
+  </main>
 
-      <p>
-        Placeholder text until I get to working on frontend
-      </p>
-
-    </main>
-  </body>
+</body>
 
 </html>
